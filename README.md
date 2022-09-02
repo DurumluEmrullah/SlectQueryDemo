@@ -21,7 +21,7 @@
 7. BaseJoinDao
 
 
-### 1.``` @Column``` Annotation'u
+### 1. ```@Column``` Annotation'u
 
 > Bu annotation pojolar için fieldlerde kullanılmalıdır. 
 > Bu annotationun sahip olduğu name alanına veritabanında ilgili sütunun adı verilmelidir.
@@ -54,5 +54,5 @@
 
 > Yukarıdaki örnekte verilen ExamplePojonun sahip olduğu Table annotation'u onun veri tabanında Example_Table tablosuna denk geldiğini göstermektedir.
 
-### 3.```@JoinColumn ``` Annotation'u
+### 3. ```@JoinColumn ``` Annotation'u
 
