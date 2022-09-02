@@ -1,9 +1,9 @@
 
 
-#Otomatik sorgu oluşturucu 
+# Otomatik sorgu oluşturucu 
 
 
-##Uygulamanın amacı
+## Uygulamanın amacı
 > JDBC template ve benzeri veri tabanına bağlantı için kendimiz manuel olarak sorgu yazmamız gereken 
 > yapılar için bu sorgu yazma maliyetini düşüren ve kodların tekrar etmesinin önüne geçerek geliştirme yapmayı daha 
 > pratik ve hızlı bir hale getirmeyi amaçlayan bir yapıdır.
@@ -11,7 +11,7 @@
 > Uygulama temel olarak iki Base sınıf ve bunlara yardımcı annotationlardan oluşmaktadır.
 > 
 
-##Uygulamanın Bileşenleri 
+## Uygulamanın Bileşenleri 
 1. ```@Column ``` Annotation'u 
 2. ```@Table ``` Annotation'u
 3. ```@JoinColumn``` Annotation'u
