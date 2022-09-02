@@ -22,9 +22,8 @@ public class Main {
         aJoinBDto.setSurname("aaa");
         aJoinBDto.setFirstTableId(1);
         aJoinBDto.setName("Emrul");
-        aJoinBDao.getAllByNameAndSurnameAndAge(aJoinBDto,"B","C","A");
-
-
+        String allByNameAndSurnameAndAge = aJoinBDao.getAllByNameAndSurnameAndAge(aJoinBDto, "B", "C", "A");
+        System.out.println("getAllByNameAndSurnameAndAge : "+allByNameAndSurnameAndAge);
 
 
         ExampleDao exampleDao = new ExampleDao();
@@ -38,7 +37,7 @@ public class Main {
         String examplePojo2ByField1AndField2AndField3AndField7 = exampleDao2.getExamplePojo2ByField1AndField2AndField3AndField7(new ExamplePojo2());
         String examplePojo2ByField5AndField3AndField1AndField2 = exampleDao2.getExamplePojo2ByField5AndField3AndField1AndField2(new ExamplePojo2());
         String examplePojo2ByField5 = exampleDao2.getExamplePojo2ByField5(new ExamplePojo2());
-        String examplePojo2ByField5AndField3AndField1AndField2AndField9AndField10 = exampleDao2.getExamplePojo2ByField5AndField3AndField1AndField2AndField9AndField10(new ExamplePojo2());
+        String examplePojo2ByField5AndField3AndField1AndField2AndField9AndField10 = exampleDao2.getExamplePojo2ByField5AndField3AndField1AndField2AndField9AndField10(new ExamplePojo2(),"type_1","type_2");
         System.out.println("examplePojo2ByField1AndField2AndField3AndField7  =  "+examplePojo2ByField1AndField2AndField3AndField7);
         System.out.println("examplePojo2ByField5AndField3AndField1AndField2  =  "+examplePojo2ByField5AndField3AndField1AndField2);
         System.out.println("examplePojo2ByField5  =  "+examplePojo2ByField5);

@@ -21,7 +21,10 @@ public class BaseJoinDao <E>{
 
     public String select(E e,Object ... args){
 
-        String query="Select ";
+        StringBuffer query = new StringBuffer();
+        query.append("Select ");
+
+
         String[] whereConditions;
         List<String> where = new ArrayList<>();
         List values = new ArrayList();
@@ -67,7 +70,7 @@ public class BaseJoinDao <E>{
         Annotation[] dtoDeclaredAnnotations = tClass.getDeclaredAnnotations();
 
         for (Annotation dtoDeclaredAnnotation : dtoDeclaredAnnotations) {
-            if(dtoDeclaredAnnotation.annotationType().getName().trim().equals("com.company.annotations.dto.JoinTable")){
+            if(dtoDeclaredAnnotation instanceof  JoinTable){
                 leftTableName= ((JoinTable)dtoDeclaredAnnotation).leftTableName();
                 leftTableAlias= ((JoinTable)dtoDeclaredAnnotation).leftTableAlias();
                 rightTableName= ((JoinTable)dtoDeclaredAnnotation).rightTableName();
@@ -86,19 +89,21 @@ public class BaseJoinDao <E>{
                 if (declaredAnnotation instanceof JoinColumn) {
 
                     if(((JoinColumn)declaredAnnotation).isLeft()){
-                        query +=leftTableAlias+"."+((JoinColumn)declaredAnnotation).columnName().trim() +", ";
+                        query.append(leftTableAlias).append(".").append(((JoinColumn)declaredAnnotation).columnName().trim()).append(", ");
+
                     }else{
-                        query +=rightTableAlias+"."+((JoinColumn)declaredAnnotation).columnName().trim() +", ";
+                        query.append(rightTableAlias).append(".").append(((JoinColumn)declaredAnnotation).columnName().trim()).append(", ");
                     }
-
-
                 }
             }
         }
 
-        query = query.substring(0,query.lastIndexOf(","));
-        query += " FROM ";
-        query += leftTableName + " "+leftTableAlias +" INNER JOIN "+ rightTableName  +" "+ rightTableAlias  + " ON ";
+        query.delete(query.toString().lastIndexOf(","),query.toString().length());
+
+        query.append(" FROM ")
+                .append(leftTableName).append(" ").append(leftTableAlias).append(" INNER JOIN ").append(rightTableName).append(" ").append(rightTableAlias).append(" ON ");
+
+
 
 
         for (Field declaredField : declaredFields) {
@@ -107,10 +112,25 @@ public class BaseJoinDao <E>{
                 if(declaredAnnotation instanceof JoinColumn){
                     if(!((JoinColumn)declaredAnnotation).joinColumnName().equals("")){
                         if(((JoinColumn)declaredAnnotation).isLeft()){
-                            query+=leftTableAlias + "."+((JoinColumn)declaredAnnotation).columnName()+"="+rightTableAlias+"."+((JoinColumn)declaredAnnotation).joinColumnName()+" AND ";
+                            query.append(leftTableAlias)
+                                    .append(".")
+                                    .append(((JoinColumn)declaredAnnotation).columnName())
+                                    .append("=")
+                                    .append(rightTableAlias)
+                                    .append(".")
+                                    .append(((JoinColumn)declaredAnnotation).joinColumnName())
+                                    .append(" AND ");
                         }
                         else {
-                            query+=rightTableAlias + "."+((JoinColumn)declaredAnnotation).columnName()+"="+leftTableAlias+"."+((JoinColumn)declaredAnnotation).joinColumnName()+" AND ";
+                            query
+                                    .append(rightTableAlias)
+                                    .append(".")
+                                    .append(((JoinColumn)declaredAnnotation).columnName())
+                                    .append("=")
+                                    .append(leftTableAlias)
+                                    .append(".")
+                                    .append(((JoinColumn)declaredAnnotation).joinColumnName())
+                                    .append(" AND ");
                         }
                     }
                 }
@@ -118,11 +138,12 @@ public class BaseJoinDao <E>{
         }
 
 
-        query = query.substring(0,query.lastIndexOf("AND"));
+        query.delete(query.toString().lastIndexOf("AND"),query.toString().length());
+
 
 
         if(whereConditions.length>0){
-            query+=" WHERE ";
+            query.append(" WHERE ");
 
             for (Field declaredField : declaredFields) {
                 declaredField.setAccessible(true);
@@ -132,7 +153,7 @@ public class BaseJoinDao <E>{
                         try {
                             Annotation[] declaredAnnotations1 = declaredField.getDeclaredAnnotations();
                             for (Annotation annotation : declaredAnnotations1) {
-                                if(annotation.annotationType().getName().trim().equals("com.company.annotations.dto.JoinColumn")){
+                                if(annotation instanceof JoinColumn){
 
                                     if(((JoinColumn)annotation).isLeft()){
                                         where.add(leftTableAlias+"."+((JoinColumn)annotation).columnName());
@@ -161,10 +182,11 @@ public class BaseJoinDao <E>{
 
         for (String whereCondition : where) {
 
-            query+= " "+whereCondition +" = ? AND ";
+            query.append(" ").append(whereCondition).append(" = ? AND ");
+
         }
 
-        query= query.substring(0,query.lastIndexOf("AND"));
+        query.delete(query.toString().lastIndexOf("AND"),query.toString().length());
 
         for (Method subClassMethod : subClassMethods) {
             if(subClassMethod.getName().trim().equals(methodName.trim())){
@@ -175,7 +197,7 @@ public class BaseJoinDao <E>{
                         String[] extraConditions = ((Query) declaredAnnotation).extraConditions();
 
                         for (String extraCondition : extraConditions) {
-                            query +=" AND "+ extraCondition;
+                            query.append(" AND ").append(extraCondition);
                         }
 
                         for (Object arg : args) {
@@ -185,19 +207,8 @@ public class BaseJoinDao <E>{
 
                 }
             }
-
-
-
         }
 
-
-        query=query.substring(0,query.lastIndexOf(","));
-
-
-
-
-
-
-        return query;
+        return query.toString();
     }
 }
