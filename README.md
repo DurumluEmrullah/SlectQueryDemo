@@ -162,6 +162,60 @@ Select  ..... FROM TableA L INNER JOIN  TableB R ON L.FIRST_TABLE_ID=R.SECOND_TA
 >
 
 
-### 4. ```@Query ``` Annotation'u
+### 5. ```@Query ``` Annotation'u
 
-> Bu annotation method seviyesinde çalışmaktadır. 
+> Bu annotation method seviyesinde çalışmaktadır. Bu annotationun sahip olduğu bir tane alan vardır :
+> *  extraConditions (String array değer alır)
+> 
+> Bu annotation ekstra durumlar için var olan bir annotationdur. Örnek vermek gerekirse: sorgumuzda müşteri tipleri diye bir alan olacak ve bu alan birden fazla müşteri tipine sahip diyelim
+> bu birden fazla müşteri tipini sorgumuza bu parametre içinde yazıp ekletebiliriz. 
+> aynı zamanda ilgili fonksiyona bu alanda geçilecek olan değerler verilmelidir : 
+> 
+#### Örnek Kullanım 1: 
+
+```java
+
+    @Query(extraConditions = "A.CUSTOMER_TYPE IN (?, ? ,?)")
+    public String getAllByNameAndSurnameAndAge(AJoinBDto aJoinBDto, String firstTypeCustomer, String secondTypeCustomer, String thirdTypeCustomer){
+        return select(aJoinBDto,firstTypeCustomer,secondTypeCustomer,thirdTypeCustomer);
+    }
+
+```
+
+> Yuykarıdaki örnekte veri tabanından A tablosu ile B tablosunun joinlenmiş değerlerini çekiyoruz. 
+> Bu değerler Name,Surname ve Age alanına göre filtreli bir şekilde verilecektir . Ekstra olarak A tablosundaki müşteri tipleri belirtilen 3 değerde olmasını istiyoruz.
+> Bu 3 değeri şekilde görüldüğü gibi select sorgusuna sırayla veriyoruz. Ve bu alan sorgumuza eklenmiş oluyor.Bu işlemin sonucunda oluşacak sorgu :
+
+```sql
+Select  ..... FROM .... ON ... WHERE ..... AND  A.CUSTOMER_TYPE IN (?, ? ,?)
+```
+>şeklinde olacaktır.
+
+#### Örnek Kullanım 2: 
+
+```java
+
+    @Query(extraConditions = {"A.CUSTOMER_TYPE IN (?, ? ,?)","B.CONTRACT_TYPE IN (? , ?)"})
+    public String getAllByNameAndSurnameAndAge(AJoinBDto aJoinBDto, String firstTypeCustomer, String secondTypeCustomer, String thirdTypeCustomer,
+            String contractType1,String contractType2){
+        return select(aJoinBDto,firstTypeCustomer,secondTypeCustomer,thirdTypeCustomer,
+            contractType1,contractType2);
+    }
+
+```
+
+> Eğer birden fazla böyle bir alan varsa select fonksiyonumuza gönderdiğimiz değerler. @Query annotationuna verdiğimiz değerlerin sırasında olması gerekmektedir.
+> Yukarıda da görüldüğü gibi ilk başta CUSTOMER_TYPE IN(?,?,? ) sorgu parçası verilmiş ve ilk sırada bu sorgu parçasındaki 
+> değerler verilmiştir sonradan da ikinci sorgu parçacığı olan CONTRACT_TYPE IN (?,?) değerleri sırayla verilmiştir.
+> Bu işlemin sonucunda oluşacak sorgu : 
+>
+```sql
+Select  ..... FROM .... ON ... WHERE ..... AND  A.CUSTOMER_TYPE IN (?, ? ,?) AND B.CONTRACT_TYPE IN (? , ?)
+```
+
+>şeklinde olacaktır.
+> 
+>
+### 5. BaseDao Class'ı
+
+> 
