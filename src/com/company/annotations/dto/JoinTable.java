@@ -11,8 +11,8 @@ import java.lang.annotation.Target;
 public @interface JoinTable {
 
     String leftTableName();
-    String leftTableAlias();
+    String leftTableAlias() default "L";
     String rightTableName();
-    String rightTableAlias();
+    String rightTableAlias() default "R";
 
 }
