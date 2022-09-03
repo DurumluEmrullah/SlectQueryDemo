@@ -21,6 +21,7 @@
 6. BaseDao<E>
 7. BaseJoinDao<E>
 
+--------
 
 ### 1. ```@Column``` Annotation'u
 
@@ -40,6 +41,8 @@
 > onun veri tabanındaki ID sutununa karşılk geldiğini göstermektedir. Bu annotation sayesinde sorgu oluştururken Sutunların adlarını öğreniyoruz ve ona göre sorgular oluşturuyoruz.
 >
 
+---------------
+
 ### 2. ```@Table ``` Annotation'u
 
 > Bu annotation pojolar için class seviyesinde kullanılmalıdır. Bu anotation sayesinde tanımlanan pojonun veri tabanında hangi tabloya denk geldiğini anlayabiliyoruz.
@@ -54,6 +57,9 @@
 ```
 
 > Yukarıdaki örnekte verilen ExamplePojonun sahip olduğu Table annotation'u onun veri tabanında Example_Table tablosuna denk geldiğini göstermektedir.
+
+
+-----------------
 
 ### 3. ```@JoinTable ``` Annotation'u
 
@@ -100,9 +106,12 @@ public class AJoinBDto {
 
 ````sql
 
-Select ...... FROM FirstTable A INNER JOIN SecondTable ......
+Select ...... FROM FirstTable A INNER JOIN SecondTable B......
 
 ````
+
+
+----------------------
 
 ### 4. ```@JoinColumn ``` Annotation'u
 
@@ -162,6 +171,8 @@ Select  ..... FROM TableA L INNER JOIN  TableB R ON L.FIRST_TABLE_ID=R.SECOND_TA
 >
 
 
+------------------------
+
 ### 5. ```@Query ``` Annotation'u
 
 > Bu annotation method seviyesinde çalışmaktadır. Bu annotationun sahip olduğu bir tane alan vardır :
@@ -184,7 +195,7 @@ Select  ..... FROM TableA L INNER JOIN  TableB R ON L.FIRST_TABLE_ID=R.SECOND_TA
 
 > Yuykarıdaki örnekte veri tabanından A tablosu ile B tablosunun joinlenmiş değerlerini çekiyoruz. 
 > Bu değerler Name,Surname ve Age alanına göre filtreli bir şekilde verilecektir . Ekstra olarak A tablosundaki müşteri tipleri belirtilen 3 değerde olmasını istiyoruz.
-> Bu 3 değeri şekilde görüldüğü gibi select sorgusuna sırayla veriyoruz. Ve bu alan sorgumuza eklenmiş oluyor.Bu işlemin sonucunda oluşacak sorgu :
+> Bu 3 değeri şekilde görüldüğü gibi select methoduna sırayla veriyoruz. Ve bu alan sorgumuza eklenmiş oluyor.Bu işlemin sonucunda oluşacak sorgu :
 
 ```sql
 Select  ..... FROM .... ON ... WHERE ..... AND  A.CUSTOMER_TYPE IN (?, ? ,?)
@@ -204,7 +215,7 @@ Select  ..... FROM .... ON ... WHERE ..... AND  A.CUSTOMER_TYPE IN (?, ? ,?)
 
 ```
 
-> Eğer birden fazla böyle bir alan varsa select fonksiyonumuza gönderdiğimiz değerler. @Query annotationuna verdiğimiz değerlerin sırasında olması gerekmektedir.
+> Eğer birden fazla böyle bir alan varsa select methodumuza gönderdiğimiz değerler. @Query annotationuna verdiğimiz değerlerin sırasında olması gerekmektedir.
 > Yukarıda da görüldüğü gibi ilk başta CUSTOMER_TYPE IN(?,?,? ) sorgu parçası verilmiş ve ilk sırada bu sorgu parçasındaki 
 > değerler verilmiştir sonradan da ikinci sorgu parçacığı olan CONTRACT_TYPE IN (?,?) değerleri sırayla verilmiştir.
 > Bu işlemin sonucunda oluşacak sorgu : 
@@ -215,21 +226,23 @@ Select  ..... FROM .... ON ... WHERE ..... AND  A.CUSTOMER_TYPE IN (?, ? ,?) AND
 
 >şeklinde olacaktır.
 > 
->
+
+------------------
+
 ### 6. BaseDao<E> Class'ı
 
 >Bu class veri tabanında bir tabloya karşılık gelen pojolar için kullanılmaktadır. Generic kısımda bulunan E bölümüne 
-> yukarıdaki @Table ve @Column anahtarlarıyla oluşturulmuş pojo nesnesi gelmelidir. Sahip olduğu tek fonksiyon vardır: 
+> yukarıdaki @Table ve @Column anahtarlarıyla oluşturulmuş pojo nesnesi gelmelidir. Sahip olduğu tek method vardır: 
 >
 > *  ````public List<E> select(E e,Object ... args)````
 > 
 
 ####  ````public List<E> select(E e,Object ... args)````
 
-> Bu fonksiyon belirtilen kurallara göre verilen obje üzerinden select sorgusunu oluşturup fonksiyonun sonunda "Jdbc template bu kısmda kullanılacak."
+> Bu method belirtilen kurallara göre verilen obje üzerinden select sorgusunu oluşturup methodun sonunda "Jdbc template bu kısmda kullanılacak."
 > yazdığım yere jdbc template kodları geldikten sonrada select sorgusu sonucunda üretilen sonuçları dönecektir.
 > 
-> Bu fonksiyon BaseDao clasını extend eden SubDao classlarında kullanılmalıdır. 
+> Bu method BaseDao clasını extend eden SubDao classlarında kullanılmalıdır. 
 > 
 #### Örenk Kullanım : 
 
@@ -257,7 +270,7 @@ Select  ..... FROM .... ON ... WHERE ..... AND  A.CUSTOMER_TYPE IN (?, ? ,?) AND
 
 ````
 
- Yukarıda da görüldüğü gibi bu fonksiyonu kullanacak olan fonksiyonların isimlendirilmesinde belirli kurallar vardır. Bu kuralları 4. fonksiyon olan getExamplePojo2ByField5AndField3AndField1AndField2AndField9AndField10 üzerinden ele alalım.
+ Yukarıda da görüldüğü gibi bu methodu kullanacak olan methodların isimlendirilmesinde belirli kurallar vardır. Bu kuralları 4. method olan getExamplePojo2ByField5AndField3AndField1AndField2AndField9AndField10 üzerinden ele alalım.
 Bu kodun çalışmasıyla ortaya çıkacak sorgu şu şekildedir:
 ````sql
 
@@ -269,23 +282,25 @@ Bu kodun çalışmasıyla ortaya çıkacak sorgu şu şekildedir:
 
 > 
 > #### 1. isimlendirme standartı : 
-> Bu fonksiyonu kullanacak olan methodların ismi iki bölümden oluşacaktır. Örnek üzerinden gidersek bunlar : 
+> Bu methodu kullanacak olan methodların ismi iki bölümden oluşacaktır. Örnek üzerinden gidersek bunlar : 
 > getExamplePojo2   ve   ByField5AndField3AndField1AndField2AndField9AndField10 .
 >  İlk kısım opsiyoneldir kişi istediği gibi yazabilir. İkinci kısım ise BaseDao clasındaki select sorgusunun nasıl oluşturulacağına yön vermektedir. 
 > Aşağıda belirtildiği gibi yazılmalıdır.
 > 1. ikinci kısım By ile başlamalıdır
 > 2. By dan sonra filtrelenmek istenen alanlar sırasıyla And ile ayırılarak verilmelidir. Bu verilen isimler BaseClass a generic bir şekilde geçilmiş olan objenin 
 > field alanlarıyla birebir aynı olmalıdır.(Case sensetive değildir. Arka planda bunları küçük harfe çevirip kontrol ediyor ).
-> 3. Filtrelemede kullanılacak alanlar fonksiyona geçilecek olan ilk parametredeki objenin ilgili alanları şeklinde doldurulmalıdır. Örneğin : getAllByIdAndName tarzında bir method kullanmak istersek 
+> 3. Filtrelemede kullanılacak alanlar methoda geçilecek olan ilk parametredeki objenin ilgili alanları şeklinde doldurulmalıdır. Örneğin : getAllByIdAndName tarzında bir method kullanmak istersek 
 > bu methoda göndereceğimiz objenin name ve ıd alanalarını doldurmamız gerekmektedir.
 > 
 > 
-> #### Örnekteki fonskiyona geçilen 2.ve 3. parametre : 
+> #### Örnekteki methoda geçilen 2.ve 3. parametre : 
 > Bu parametreler örnkete verilen @Query annotationu ile verilen değerlerdir. Örnekteki @Query annotationu ile verilen sorgu parçacığı
 > method isimlendirilmesinde kullanıldığında Javanın isimlendirme standartlarını bozma ihtimale ve birden fazla değer geçilebilme ihtimali olduğu için bu şekilde kullanılmıştır.
 > 
 
+------------------------
+
 
 ### 7. BaseJoinDao<E> 
 > Bu clasın işlevi BaseDao ile aynıdır . Yalnızca bu classın generic kısmına geçilecek olan DTO nesnesi @JoinTable ve @JoinColumn annotationları ile oluşturulmalıdr.
-> bir önceki yerdede bulunan "Jdbc template bu kısmda kullanılacak." yorum satırı bu classın içindeki select methodunda da mevcuttur.
+> bir önceki yerdede bulunan "Jdbc template bu kısmda kullanılacak." yorum satırı bu classın içindeki select methodunda da mevcuttur. Buraya jdbc template kodları yazılıp dönen sonucu return değerine verilmelidir.
