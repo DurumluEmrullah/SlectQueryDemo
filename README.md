@@ -18,8 +18,8 @@
 3. ```@JoinTable``` Annotation'u
 4. ```@JoinColumn``` Annotation'u
 5. ```@Query``` Annotation'u
-6. BaseDao
-7. BaseJoinDao
+6. BaseDao<E>
+7. BaseJoinDao<E>
 
 
 ### 1. ```@Column``` Annotation'u
@@ -216,6 +216,69 @@ Select  ..... FROM .... ON ... WHERE ..... AND  A.CUSTOMER_TYPE IN (?, ? ,?) AND
 >şeklinde olacaktır.
 > 
 >
-### 5. BaseDao Class'ı
+### 6. BaseDao<E> Class'ı
 
+>Bu class veri tabanında bir tabloya karşılık gelen pojolar için kullanılmaktadır. Generic kısımda bulunan E bölümüne 
+> yukarıdaki @Table ve @Column anahtarlarıyla oluşturulmuş pojo nesnesi gelmelidir. Sahip olduğu tek fonksiyon vardır: 
+>
+> *  ````public List<E> select(E e,Object ... args)````
+> 
+
+####  ````public List<E> select(E e,Object ... args)````
+
+> Bu fonksiyon belirtilen kurallara göre verilen obje üzerinden select sorgusunu oluşturup fonksiyonun sonunda "Jdbc template bu kısmda kullanılacak."
+> yazdığım yere jdbc template kodları geldikten sonrada select sorgusu sonucunda üretilen sonuçları dönecektir.
+> 
+> Bu fonksiyon BaseDao clasını extend eden SubDao classlarında kullanılmalıdır. 
+> 
+#### Örenk Kullanım : 
+
+````java
+    public class ExampleDao2 extends BaseDao<ExamplePojo2> {
+    
+        public List<ExamplePojo2> getExamplePojo2ByField1AndField2AndField3AndField7(ExamplePojo2 examplePojo2){
+            return select(examplePojo2);
+        }
+    
+        public List<ExamplePojo2>  getExamplePojo2ByField5AndField3AndField1AndField2(ExamplePojo2 examplePojo2){
+            return select(examplePojo2);
+        }
+    
+        public List<ExamplePojo2>  getExamplePojo2ByField5(ExamplePojo2 examplePojo2){
+            return select(examplePojo2);
+        }
+    
+        @Query(extraConditions = "FIELD_1 IN(?,?)")
+        public List<ExamplePojo2>  getExamplePojo2ByField5AndField3AndField1AndField2AndField9AndField10(ExamplePojo2 examplePojo2,String field1Type1,String field1Type2){
+            return select(examplePojo2,field1Type1,field1Type2);
+        }
+    }
+
+
+````
+
+ Yukarıda da görüldüğü gibi bu fonksiyonu kullanacak olan fonksiyonların isimlendirilmesinde belirli kurallar vardır. Bu kuralları 4. fonksiyon olan getExamplePojo2ByField5AndField3AndField1AndField2AndField9AndField10 üzerinden ele alalım.
+Bu kodun çalışmasıyla ortaya çıkacak sorgu şu şekildedir:
+````sql
+
+    SELECT ...pojoda @Column annotationu ile belirtilen alanlar ... FROM ... pojo da @Table annotationu ile belirtilen tablo adı...
+        WHERE  FIELD_1 = ? AND  FIELD_2 = ? AND  FIELD_3 = ? AND  FIELD_5 = ? 
+        AND  FIELD_9 = ? AND  FIELD_10 = ? AND FIELD_1 IN(?,?)
+````
+
+
+> 
+> #### 1. isimlendirme standartı : 
+> Bu fonksiyonu kullanacak olan methodların ismi iki bölümden oluşacaktır. Örnek üzerinden gidersek bunlar : 
+> getExamplePojo2   ve   ByField5AndField3AndField1AndField2AndField9AndField10 .
+>  İlk kısım opsiyoneldir kişi istediği gibi yazabilir. İkinci kısım ise BaseDao clasındaki select sorgusunun nasıl oluşturulacağına yön vermektedir. 
+> 1. ikinci kısım By ile başlamalıdır
+> 2. By dan sonra filtrelenmek istenen alanlar sırasıyla And ile ayırılarak verilmelidir. Bu verilen isimler BaseClass a generic bir şekilde geçilmiş olan objenin 
+> field alanlarıyla birebir aynı olmalıdır.(Case sensetive değildir. Arka planda bunları küçük harfe çevirip kontrol ediyor ).
+> 3. Filtrelemede kullanılacak alanlar fonksiyona geçilecek olan ilk parametredike objenin filtrelemede kullanılacak alanları dolu olmalıdır.
+> 
+> 
+> #### Örnekteki fonskiyona geçilen 2.ve 3. parametre : 
+> Bu parametreler örnketeverilen @Query annotationu ile verilen değerlerdir. Örnekteki @Query annotationu ile verilen sorgu parçacığı
+> method isimlendirilmesinde kullanıldığında Javanın isimlendirme standartlarını bozma ihtimale ve birden fazla parametre geçilebilme ihtimali olduğu için bu şekilde kullanılmıştır.
 > 

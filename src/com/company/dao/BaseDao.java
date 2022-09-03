@@ -14,7 +14,7 @@ import java.util.*;
 
 public class BaseDao<E> {
 
-    public String select(E e,Object ... args){
+    public List<E> select(E e,Object ... args){
         StringBuffer query = new StringBuffer();
         query.append("Select ");
         String[] whereConditions;
@@ -137,9 +137,12 @@ public class BaseDao<E> {
             }
         }
 
+        // Jdbc template bu kısmda kullanılacak.
+        System.out.println("Oluşturulan sorgu : "+query.toString());
+        System.out.println("Sorgunun parametreleri : "+values);
 
 
-        return query.toString();
+        return null;
     }
 
 
