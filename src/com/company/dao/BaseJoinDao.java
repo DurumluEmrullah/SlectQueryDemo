@@ -19,7 +19,7 @@ import java.util.List;
 
 public class BaseJoinDao <E>{
 
-    public String select(E e,Object ... args){
+    public List<E> select(E e,Object ... args){
 
         StringBuffer query = new StringBuffer();
         query.append("Select ");
@@ -209,6 +209,12 @@ public class BaseJoinDao <E>{
             }
         }
 
-        return query.toString();
+
+
+        // Jdbc template bu kısmda kullanılacak.
+        System.out.println("Oluşturulan sorgu : "+query.toString());
+        System.out.println("Sorgunun parametreleri : "+values);
+
+        return null;
     }
 }

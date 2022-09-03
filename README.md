@@ -272,13 +272,20 @@ Bu kodun çalışmasıyla ortaya çıkacak sorgu şu şekildedir:
 > Bu fonksiyonu kullanacak olan methodların ismi iki bölümden oluşacaktır. Örnek üzerinden gidersek bunlar : 
 > getExamplePojo2   ve   ByField5AndField3AndField1AndField2AndField9AndField10 .
 >  İlk kısım opsiyoneldir kişi istediği gibi yazabilir. İkinci kısım ise BaseDao clasındaki select sorgusunun nasıl oluşturulacağına yön vermektedir. 
+> Aşağıda belirtildiği gibi yazılmalıdır.
 > 1. ikinci kısım By ile başlamalıdır
 > 2. By dan sonra filtrelenmek istenen alanlar sırasıyla And ile ayırılarak verilmelidir. Bu verilen isimler BaseClass a generic bir şekilde geçilmiş olan objenin 
 > field alanlarıyla birebir aynı olmalıdır.(Case sensetive değildir. Arka planda bunları küçük harfe çevirip kontrol ediyor ).
-> 3. Filtrelemede kullanılacak alanlar fonksiyona geçilecek olan ilk parametredike objenin filtrelemede kullanılacak alanları dolu olmalıdır.
+> 3. Filtrelemede kullanılacak alanlar fonksiyona geçilecek olan ilk parametredeki objenin ilgili alanları şeklinde doldurulmalıdır. Örneğin : getAllByIdAndName tarzında bir method kullanmak istersek 
+> bu methoda göndereceğimiz objenin name ve ıd alanalarını doldurmamız gerekmektedir.
 > 
 > 
 > #### Örnekteki fonskiyona geçilen 2.ve 3. parametre : 
-> Bu parametreler örnketeverilen @Query annotationu ile verilen değerlerdir. Örnekteki @Query annotationu ile verilen sorgu parçacığı
-> method isimlendirilmesinde kullanıldığında Javanın isimlendirme standartlarını bozma ihtimale ve birden fazla parametre geçilebilme ihtimali olduğu için bu şekilde kullanılmıştır.
+> Bu parametreler örnkete verilen @Query annotationu ile verilen değerlerdir. Örnekteki @Query annotationu ile verilen sorgu parçacığı
+> method isimlendirilmesinde kullanıldığında Javanın isimlendirme standartlarını bozma ihtimale ve birden fazla değer geçilebilme ihtimali olduğu için bu şekilde kullanılmıştır.
 > 
+
+
+### 7. BaseJoinDao<E> 
+> Bu clasın işlevi BaseDao ile aynıdır . Yalnızca bu classın generic kısmına geçilecek olan DTO nesnesi @JoinTable ve @JoinColumn annotationları ile oluşturulmalıdr.
+> bir önceki yerdede bulunan "Jdbc template bu kısmda kullanılacak." yorum satırı bu classın içindeki select methodunda da mevcuttur.
